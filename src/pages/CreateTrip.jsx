@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const CreateTrip = () => {
   const [step, setstep] = useState(1)
@@ -22,8 +23,24 @@ const CreateTrip = () => {
         </div>
         <div className='p-5 md:p-12 flex felx-col flex-1'>
           {/* Steps indicators*/}
-          <div>
-            <div />
+          <div className='flexCenter space-x-2 mb-8'>
+            {[1,2,3].map((s)=>(<div key={s} className={`h-2 rounded-full transition-all duration-300 ${step===s ? 'w-8 bg-indigo-600': step>s ? 'w-2 bg-indigo-600' : 'w-2 bg-gray-200'}`}/>))}
+          </div>
+
+          <div className='flex-1 flex flex-col pt-2 sm:pt-12'>
+            {/* Step1: Destination & Days */}
+            {step==1 && (
+              <div>
+                <div>
+                  <h3>Where's is your next adventure?</h3>
+                  <p>Select your destination and duration (max 5 days).</p>
+                </div>
+                <div>
+                  <label htmlFor="">Destination</label>
+                  <GooglePalcesAutocomplete/>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
