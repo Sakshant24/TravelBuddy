@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import GooglePlacesAutocomplete from "react-google-autocomplete";
 
 const CreateTrip = () => {
   const [step, setstep] = useState(1)
@@ -37,7 +37,9 @@ const CreateTrip = () => {
                 </div>
                 <div>
                   <label htmlFor="">Destination</label>
-                  <GooglePalcesAutocomplete/>
+                  <GooglePalcesAutocomplete 
+                    apiKey=""
+                  />
                 </div>
               </div>
             )}
