@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-autocomplete";
 
 const CreateTrip = () => {
+  const placesApiKey = import.meta.env
   const [step, setstep] = useState(1)
   const [loading, setloading] = useState(false)
   const [formData, setformData] = useState({
