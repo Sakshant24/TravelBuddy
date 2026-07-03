@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import GooglePlacesAutocomplete from "react-google-autocomplete";
+import LocationAutocomplete from "../components/LocationAutocomplete";
 
 const CreateTrip = () => {
-  const placesApiKey = import.meta.env
   const [step, setstep] = useState(1)
   const [loading, setloading] = useState(false)
   const [formData, setformData] = useState({
@@ -12,7 +11,7 @@ const CreateTrip = () => {
     budget: '',
   })
 
-  //Planner Form view
+  //Planner Form view 
   return (
     <div className='max-padd-container flexCenter pt-18 h-screen'>
       {/* Container */}
@@ -38,9 +37,14 @@ const CreateTrip = () => {
                 </div>
                 <div>
                   <label htmlFor="">Destination</label>
-                  <GooglePalcesAutocomplete 
-                    apiKey=""
-                  />
+                    <LocationAutocomplete onSelect={(place)=>{
+                              setformData({
+                                        ...formData,
+                                        destination: place
+                              });
+                              console.log(place);
+                        }}
+                    />
                 </div>
               </div>
             )}
