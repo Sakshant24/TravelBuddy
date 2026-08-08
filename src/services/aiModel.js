@@ -166,18 +166,22 @@ const chat = ai.chats.create({
 });
 //  Main function to generate the trip
 export async function generateTripWithAI(DYNAMIC_PROMPT) {
+    console.log("Prompt received"); 
+    console.log(DYNAMIC_PROMPT);
     try {
         const response = await chat.sendMessage({
             message: DYNAMIC_PROMPT,
         });
-
+        console.log(response);
         const textResponse = response.text;
-        // CLEANING THE STRING: Remove Markdown JSON formatting if the AI includes it
-        const cleanJson = textResponse.replace(/```json|```/g, "").trim();
-        // console.log("Clean json", cleanJson);
+        console.log(textResponse);
+        const cleanJson = textResponse
+            .replace(/```json|```/g, "")
+            .trim();
+        console.log(cleanJson);
         return JSON.parse(cleanJson);
     } catch (error) {
-        console.error("Error generating trip:", error);
+        console.error(error);
         throw error;
     }
 }
