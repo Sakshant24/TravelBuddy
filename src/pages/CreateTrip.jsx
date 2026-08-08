@@ -5,17 +5,15 @@ import { BUDGET_OPTIONS, TRAVELER_OPTIONS } from "../assets/data";
 import { toast } from "sonner";
 import { generateTripWithAI } from "../services/aiModel";
 
-const CreateTrip = () => {
+const CreateTrip = () =>{
   const [step, setstep] = useState(1);
   const [loading, setloading] = useState(false);
-
   const [formData, setformData] = useState({
     destination: null,
     noOfDays: "",
     traveler: "",
     budget: "",
   });
-
   const handleInputChange = (name, value) => {
     setformData((prev) => ({
       ...prev,
@@ -44,20 +42,18 @@ const CreateTrip = () => {
       return toast.error("AI can currently generate up to 5 days only.")
     }
     setloading(true)
-    console.log(formData);
+    // console.log(formData);
 
     const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
-  
     try{
       const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
-    }catch(error){
       setloading(false)
+    }catch(error){
       console.log("AI Error:",error)
       toast.error(error.message?.includes('429') ? "Rate limit hit! Wait 60s." : "Generation failed.");
     }
   }
-
-  if (loading) {
+  if(loading){
     return (
       <div className="min-h-screen bg-white flexCenter flex-col p-4">
         <div className="relative">

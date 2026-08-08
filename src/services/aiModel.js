@@ -2,12 +2,11 @@
 // and converted for client side but later will create as server side as separate service... this is for pure react(client side)
 
 import { GoogleGenAI } from "@google/genai";
-
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 // Initialize the Chat session with history to enforce the JSON schema
 const chat = ai.chats.create({
     model: "gemini-3.5-flash",
-    history: [
+    history:[
         {
             role: "user",
             parts: [
@@ -166,22 +165,17 @@ const chat = ai.chats.create({
 });
 //  Main function to generate the trip
 export async function generateTripWithAI(DYNAMIC_PROMPT) {
-    console.log("Prompt received"); 
-    console.log(DYNAMIC_PROMPT);
-    try {
+    try{
         const response = await chat.sendMessage({
-            message: DYNAMIC_PROMPT,
+            message : DYNAMIC_PROMPT,
         });
-        console.log(response);
         const textResponse = response.text;
-        console.log(textResponse);
-        const cleanJson = textResponse
-            .replace(/```json|```/g, "")
-            .trim();
-        console.log(cleanJson);
-        return JSON.parse(cleanJson);
-    } catch (error) {
-        console.error(error);
+        // console.log("Chat response:",textResponse);
+        //Cleaning the string : Removing Markdown json formatting if the AI includes it
+        const cleanJson = textResponse.replace(/```json|```/g, "").trim();
+        console.log("Clean json", cleanJson);
+    }catch(error){
+        console.error("Error generating trip:",error);
         throw error;
     }
 }
