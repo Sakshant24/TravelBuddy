@@ -4,8 +4,10 @@ import { ArrowRight, ArrowRightIcon, CalendarSearch, CheckCircle, Loader2 } from
 import { BUDGET_OPTIONS, TRAVELER_OPTIONS } from "../assets/data";
 import { toast } from "sonner";
 import { generateTripWithAI } from "../services/aiModel";
+import LoginDialog from "../components/shared/LoginDialog";
 
 const CreateTrip = () =>{
+  const [openDialog, setOpenDialog] = useState(false);
   const [step, setstep] = useState(1);
   const [loading, setloading] = useState(false);
   const [formData, setformData] = useState({
@@ -35,6 +37,10 @@ const CreateTrip = () =>{
   }
 
   const generateTrip = async() => {
+    const user = localStorage.getItem("user")
+    if(!user){
+      return setOpenDialog(true)
+    }
     if (!formData.destination || !formData.noOfDays || !formData.budget || !formData.traveler) {
       return toast.error('Please fill all details.')
     }
@@ -223,6 +229,7 @@ const CreateTrip = () =>{
           </div>
         </div>
       </div>
+      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)}/>
     </div>
   );
 };
