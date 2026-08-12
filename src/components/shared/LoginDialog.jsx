@@ -6,8 +6,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { usegoogleAuth } from '../../services/authApi'
+import { toast } from 'sonner'
 
 const LoginDialog = ({open, onClose}) => {
+  const handleLogin = usegoogleAuth({
+    onSuccess:()=>{
+      onclose()
+      toast.success("Login Successful")
+    }
+  })
+
   return (
     <Dialog open={open} onOpenChange={ onClose}>
         <DialogContent>
