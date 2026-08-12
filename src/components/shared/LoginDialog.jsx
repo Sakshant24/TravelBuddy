@@ -5,7 +5,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  
 } from "@/components/ui/dialog"
 
 const LoginDialog = ({open, onClose}) => {
@@ -23,5 +22,4 @@ const LoginDialog = ({open, onClose}) => {
     </Dialog>
   )
 }
-
 export default LoginDialog
