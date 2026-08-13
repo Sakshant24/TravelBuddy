@@ -1,18 +1,21 @@
 import React from 'react'
+import {FaGoogle} from "react-icons/fa6"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter
 } from "@/components/ui/dialog"
 import { usegoogleAuth } from '../../services/authApi'
 import { toast } from 'sonner'
+import {Button} from '../ui/button'
 
 const LoginDialog = ({open, onClose}) => {
   const handleLogin = usegoogleAuth({
     onSuccess:()=>{
-      onclose()
+      onClose()
       toast.success("Login Successful")
     }
   })
@@ -27,6 +30,11 @@ const LoginDialog = ({open, onClose}) => {
                 and remove your data from our servers.
             </DialogDescription>
             </DialogHeader>
+            <DialogFooter>
+              <Button onClick={handleLogin} className={"w-full rounded-md"}>
+                <FaGoogle/> Login with Google
+              </Button>
+            </DialogFooter>
         </DialogContent>
     </Dialog>
   )
