@@ -1,9 +1,11 @@
 import { Plane, Plus, User } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
+import LoginDialog from './LoginDialog'
 
 const Header = () => {
+    const [openDialog, setOpenDialog] = useState(false)
   return (
     <header className='bg-white border-b border-gray-200 px-6 py-3 flexBetween absolute top-0 left-0 right-0 w-full z-50'>
         {/* Logo */}
@@ -20,10 +22,11 @@ const Header = () => {
                Create Trip 
             </Button>
             <div className='flex mt-1'>
-                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5!">
+                <Button onClick={()=> setOpenDialog(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5!">
                 <User />
                 Login 
                 </Button>
+                <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)}/>
             </div>
         </div>
     </header> 
