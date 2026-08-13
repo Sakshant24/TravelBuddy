@@ -12,10 +12,11 @@ import { usegoogleAuth } from '../../services/authApi'
 import { toast } from 'sonner'
 import {Button} from '../ui/button'
 
-const LoginDialog = ({open, onClose}) => {
+const LoginDialog = ({open, onClose, onLoginSuccess}) => {
   const handleLogin = usegoogleAuth({
     onSuccess:()=>{
       onClose()
+      onLoginSuccess?.();
       toast.success("Login Successful")
     }
   })
