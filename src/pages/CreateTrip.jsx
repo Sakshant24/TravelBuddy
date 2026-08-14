@@ -53,6 +53,7 @@ const CreateTrip = () =>{
     const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
     try{
       const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
+      console.log(tripData)
       setloading(false)
     }catch(error){
       console.log("AI Error:",error)

@@ -174,6 +174,7 @@ export async function generateTripWithAI(DYNAMIC_PROMPT) {
         //Cleaning the string : Removing Markdown json formatting if the AI includes it
         const cleanJson = textResponse.replace(/```json|```/g, "").trim();
         // console.log("Clean json", cleanJson);
+        return JSON.parse(cleanJson);
     }catch(error){
         console.error("Error generating trip:",error);
         throw error;
