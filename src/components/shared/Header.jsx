@@ -49,13 +49,11 @@ const Header = () => {
                             <DropdownMenuContent>
                                 <DropdownMenuGroup>
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                                    <DropdownMenuItem>Billing</DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>Team</DropdownMenuItem>
-                                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                    <DropdownMenuItem>My Trips</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>
