@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import LocationAutocomplete from "../components/LocationAutocomplete";
 import { ArrowRight, ArrowRightIcon, CalendarSearch, CheckCircle, Loader2 } from "lucide-react";
 import { BUDGET_OPTIONS, TRAVELER_OPTIONS } from "../assets/data";
 import { toast } from "sonner";
 import { generateTripWithAI } from "../services/aiModel";
 import LoginDialog from "../components/shared/LoginDialog";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../services/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
-const CreateTrip = () =>{
+const CreateTrip = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [step, setstep] = useState(1);
   const [loading, setloading] = useState(false);
+  const navigate = useNavigate()
   const [formData, setformData] = useState({
     destination: null,
     noOfDays: "",
@@ -36,9 +40,9 @@ const CreateTrip = () =>{
     }
   }
 
-  const generateTrip = async() => {
+  const generateTrip = async () => {
     const user = localStorage.getItem("user")
-    if(!user){
+    if (!user) {
       return setOpenDialog(true)
     }
     if (!formData.destination || !formData.noOfDays || !formData.budget || !formData.traveler) {
@@ -51,16 +55,38 @@ const CreateTrip = () =>{
     // console.log(formData);
 
     const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
-    try{
+    try {
       const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
-      console.log(tripData)
-      setloading(false)
-    }catch(error){
-      console.log("AI Error:",error)
+      // console.log(tripData)
+      saveToDB(tripData)
+    } catch (error) {
+      console.log("AI Error:", error)
       toast.error(error.message?.includes('429') ? "Rate limit hit! Wait 60s." : "Generation failed.");
     }
   }
-  if(loading){
+
+  const saveToDB = async (tripData) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"))
+      const docId = Date.now().toString()
+      // Add a new document in collection "cities"
+      await setDoc(doc(db, "trips-ai", docId), {
+        userSelection : formData,
+        tripData : tripData,
+        userEmail : user?.email,
+        id: docId
+      });
+      setloading(false)
+      toast.success("Trip generated")
+      navigate("/trips/"+docId)
+    }
+    catch (error) {
+      setloading(false)
+      toast.error("Failed to save to database.")
+    }
+  }
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-white flexCenter flex-col p-4">
         <div className="relative">
@@ -97,10 +123,10 @@ const CreateTrip = () =>{
               <div
                 key={s}
                 className={`h-2 rounded-full transition-all duration-300 ${step === s
-                    ? "w-8 bg-indigo-600"
-                    : step > s
-                      ? "w-2 bg-indigo-600"
-                      : "w-2 bg-gray-200"
+                  ? "w-8 bg-indigo-600"
+                  : step > s
+                    ? "w-2 bg-indigo-600"
+                    : "w-2 bg-gray-200"
                   }`}
               />
             ))}
@@ -230,7 +256,7 @@ const CreateTrip = () =>{
           </div>
         </div>
       </div>
-      <LoginDialog open={openDialog} onClose={()=>setOpenDialog(false)} onLoginSuccess={generateTrip}/>
+      <LoginDialog open={openDialog} onClose={() => setOpenDialog(false)} onLoginSuccess={generateTrip} />
     </div>
   );
 };
