@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from '../ui/button'
-import { FaArrowDown, FaArrowRight } from 'react-icons/fa'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import { DollarSign, Heart, Plane } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'

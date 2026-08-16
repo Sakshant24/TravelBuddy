@@ -8,14 +8,14 @@ import {
   DialogTitle,
   DialogFooter
 } from "@/components/ui/dialog"
-import { usegoogleAuth } from '../../services/authApi'
+import { useGoogleAuth } from '../../services/authApi'
 import { toast } from 'sonner'
 import {Button} from '../ui/button'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 
 const LoginDialog = ({open, onClose, onLoginSuccess}) => {
-  const handleLogin = usegoogleAuth({
+  const handleLogin = useGoogleAuth({
     onSuccess:()=>{
       onClose()
       onLoginSuccess?.();
@@ -34,7 +34,7 @@ const LoginDialog = ({open, onClose, onLoginSuccess}) => {
             </DialogHeader>
             <div className='flex flex-col gap-6'>
               <div className='grid gap-2'>
-                <Label htmlfor="email">Email</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                     id='email'
                     type='email'
@@ -44,7 +44,7 @@ const LoginDialog = ({open, onClose, onLoginSuccess}) => {
               </div>
               <div className='grid gap-2'>
                     <div className='flex items-center'>
-                      <Label htmlfor="password">Password</Label>
+                      <Label htmlFor="password">Password</Label>
                       <a href='#'
                       className='ml-auto inline-block
                       text-sm underline-offset-4

@@ -36,15 +36,15 @@ const Header = () => {
             </Link>
             {/* Buttons & Profile */}
             <div className='flex gap-x-4 sm:gap-x-8'>
-                <Button variant='outline' className={'mt-1 bg-transparent'}>
+                <Button onClick={() => navigate('/create-trip')} variant='outline' className={'mt-1 bg-transparent cursor-pointer'}>
                     <Plus />
                     Create Trip
                 </Button>
                 <div className='flex mt-1'>
                     {user ? <div>
                         <DropdownMenu>
-                            <DropdownMenuTrigger render={<Button variant="outline" />}>
-                                <img src={user?.picture} alt='userProfile' height={37} width={37} className='rounded-full' />
+                            <DropdownMenuTrigger className="p-0 border-none cursor-pointer outline-none">
+                                <img src={user?.picture} alt='userProfile' height={37} width={37} className='rounded-full border border-gray-200 shadow-xs' />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuGroup>
@@ -52,7 +52,7 @@ const Header = () => {
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>My Trips</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate('/create-trip')}>Create Trip</DropdownMenuItem>
                                     <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>

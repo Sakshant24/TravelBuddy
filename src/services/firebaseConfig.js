@@ -5,15 +5,14 @@ import { getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDjgM9o829pj2tiQ_IzWydvhpJmPDlWg-M",
-  authDomain: "travelbuddy-ai24.firebaseapp.com",
-  projectId: "travelbuddy-ai24",
-  storageBucket: "travelbuddy-ai24.firebasestorage.app",
-  messagingSenderId: "478246679552",
-  appId: "1:478246679552:web:bb184b0e9c68e47597d4e5",
-  measurementId: "G-WYMEBR22K0"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyAx3O5HiJCNIZ7clkS8klBzYkjgRCityG0",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "travelbuddy-2412.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "travelbuddy-2412",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "travelbuddy-2412.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "259695371727",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:259695371727:web:c523155e56adc0ab4d9eba",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-8WGTP5Y0CN"
 };
 
 // Initialize Firebase

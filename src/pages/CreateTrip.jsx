@@ -1,6 +1,6 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useState } from "react";
 import LocationAutocomplete from "../components/LocationAutocomplete";
-import { ArrowRight, ArrowRightIcon, CalendarSearch, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowRight, CalendarSearch, CheckCircle, Loader2 } from "lucide-react";
 import { BUDGET_OPTIONS, TRAVELER_OPTIONS } from "../assets/data";
 import { toast } from "sonner";
 import { generateTripWithAI } from "../services/aiModel";
@@ -58,8 +58,9 @@ const CreateTrip = () => {
     try {
       const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
       // console.log(tripData)
-      saveToDB(tripData)
+      await saveToDB(tripData)
     } catch (error) {
+      setloading(false)
       console.log("AI Error:", error)
       toast.error(error.message?.includes('429') ? "Rate limit hit! Wait 60s." : "Generation failed.");
     }
@@ -69,20 +70,37 @@ const CreateTrip = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"))
       const docId = Date.now().toString()
-      // Add a new document in collection "cities"
-      await setDoc(doc(db, "trips-ai", docId), {
-        userSelection : formData,
-        tripData : tripData,
-        userEmail : user?.email,
+
+      // Sanitize payload to strip any 'undefined' fields which cause Firestore setDoc to fail
+      const cleanData = JSON.parse(JSON.stringify({
+        userSelection: formData,
+        tripData: tripData,
+        userEmail: user?.email || "",
         id: docId
-      });
+      }));
+
+      // Store in local storage first as a resilient fallback
+      localStorage.setItem('trip_' + docId, JSON.stringify(cleanData));
+
+      try {
+        await setDoc(doc(db, "trips-ai", docId), cleanData);
+        toast.success("Trip generated and saved!");
+      } catch (dbError) {
+        console.error("Firebase Save Error:", dbError);
+        if (dbError?.code === 'permission-denied' || dbError?.message?.includes('permission') || dbError?.message?.includes('permissions')) {
+          toast.warning("Trip generated! (Note: Firebase permission denied. Update Firestore rules to enable cloud sync.)", { duration: 6000 });
+        } else {
+          toast.warning(`Trip generated! (Saved locally. Firebase: ${dbError?.message || 'Error saving to cloud'})`);
+        }
+      }
+
       setloading(false)
-      toast.success("Trip generated")
-      navigate("/trips/"+docId)
+      navigate("/trips/" + docId)
     }
     catch (error) {
+      console.error("Save Error:", error);
       setloading(false)
-      toast.error("Failed to save to database.")
+      toast.error(error?.message ? `Failed to process trip: ${error.message}` : "Failed to save trip.")
     }
   }
 
