@@ -23,6 +23,7 @@ const Header = () => {
         googleLogout()
         localStorage.removeItem("user")
         navigate('/')
+        window.location.reload()
     }
 
     return (
@@ -53,6 +54,7 @@ const Header = () => {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem onClick={() => navigate('/create-trip')}>Create Trip</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate('/my-trips')}>My Trips</DropdownMenuItem>
                                     <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
