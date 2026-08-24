@@ -1,8 +1,9 @@
-import { Plane, Plus, User } from 'lucide-react'
 import React, { useState } from 'react'
+import { Plus, User } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../ui/button'
 import LoginDialog from './LoginDialog'
+import Logo from './Logo'
 import { googleLogout } from '@react-oauth/google'
 import {
     DropdownMenu,
@@ -28,14 +29,17 @@ const Header = () => {
 
     return (
         <header className='bg-[#FAF7F2]/90 backdrop-blur-xl border-b border-stone-200/80 px-6 py-3.5 flexBetween fixed top-0 left-0 right-0 w-full z-50 shadow-2xs transition-all'>
-            {/* Logo - Aeroplane icon kept intact in Warm Terracotta */}
-            <Link to={'/'} className='flex items-center gap-x-2.5 cursor-pointer group'>
-                <div className='bg-[#C85A32] p-2 rounded-xl group-hover:scale-105 transition-transform shadow-xs'>
-                    <Plane className='w-5 h-5 text-white' />
+            {/* Logo - Bespoke TravelBuddy Brand Vector Logo */}
+            <Link to={'/'} className='flex items-center gap-x-3 cursor-pointer group'>
+                <Logo size={40} />
+                <div className='flex flex-col'>
+                    <span className='font-black text-xl tracking-tight text-stone-900 leading-none'>
+                        TravelBuddy
+                    </span>
+                    <span className='text-[10px] font-bold text-[#C85A32] tracking-wider uppercase'>
+                        AI Travel Agent
+                    </span>
                 </div>
-                <span className='hidden sm:flex font-black text-xl tracking-tight text-stone-900 capitalize'>
-                    TravelBuddy
-                </span>
             </Link>
 
             {/* Buttons & Profile */}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="tbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E06D44"/>
+      <stop offset="50%" stop-color="#C85A32"/>
+      <stop offset="100%" stop-color="#A8431E"/>
+    </linearGradient>
+    <linearGradient id="trailGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded App Icon Background -->
+  <rect width="48" height="48" rx="14" fill="url(#tbGradient)"/>
+
+  <!-- Subtle Inner Ring -->
+  <rect x="1.5" y="1.5" width="45" height="45" rx="12.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="1.5"/>
+
+  <!-- Compass / Flight Arc Trail -->
+  <path d="M12 36 C 14 26, 22 18, 33 15" fill="none" stroke="url(#trailGradient)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 3"/>
+
+  <!-- Golden Travel Star Accent -->
+  <circle cx="12" cy="36" r="2" fill="#FDE68A"/>
+
+  <!-- Sleek Modern Jet / Paper Plane -->
+  <g transform="translate(14, 13) scale(0.95)">
+    <!-- Main Plane Body -->
+    <path d="M21.5 2.5 L3.5 11.2 C2.1 11.9 2.1 13.9 3.6 14.5 L9.5 16.8 L12.8 22.8 C13.4 24.1 15.2 24.3 16 23 L18.2 19.5 L21.5 2.5 Z" fill="#FFFFFF"/>
+    <!-- Fold / Wing Shadow -->
+    <path d="M21.5 2.5 L9.5 16.8 L15.2 17.5 L21.5 2.5 Z" fill="#F5EFE6"/>
+    <!-- Center Crease Accent -->
+    <path d="M21.5 2.5 L9.5 16.8" stroke="#C85A32" stroke-width="0.75" stroke-linecap="round"/>
+  </g>
+</svg>
