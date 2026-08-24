@@ -115,19 +115,19 @@ const CreateTrip = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-950 flexCenter p-4 text-white">
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots flexCenter p-4 text-stone-900">
         <div className="text-center space-y-6 max-w-md">
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-indigo-500 rounded-full blur-xl opacity-50 animate-ping" />
-            <div className="relative bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-2xl">
-              <Loader2 className="w-12 h-12 text-indigo-400 animate-spin mx-auto" />
+            <div className="absolute inset-0 bg-amber-400 rounded-full blur-xl opacity-40 animate-ping" />
+            <div className="relative bg-white/90 backdrop-blur-2xl p-6 rounded-3xl border border-amber-200 shadow-2xl">
+              <Loader2 className="w-12 h-12 text-[#C85A32] animate-spin mx-auto" />
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="text-2xl font-bold text-white">
+            <h3 className="text-2xl font-black text-stone-900">
               Curating your trip to {formData.destination?.label?.split(",")[0]}...
             </h3>
-            <p className="text-sm text-indigo-200/80 animate-pulse">
+            <p className="text-sm text-stone-600 font-semibold animate-pulse">
               Our AI is finding the best hotels, daily activities, and hidden spots for your {formData.noOfDays}-day trip...
             </p>
           </div>
@@ -137,32 +137,30 @@ const CreateTrip = () => {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-950 pt-24 pb-16 flexCenter px-4">
-      {/* Background Dot Grid */}
-      <div className="absolute inset-0 bg-grid-dots opacity-30 pointer-events-none" />
-
+    <div className="min-h-screen relative overflow-hidden bg-warm-editorial bg-grid-dots pt-24 pb-16 flexCenter px-4">
       {/* Ambient Glowing Orbs */}
-      <div className="absolute top-1/3 left-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-600/20 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-amber-300/30 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-orange-300/30 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-emerald-200/25 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Main Glassmorphism Card */}
-      <div className="relative z-10 w-full max-w-3xl bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/40 overflow-hidden flex flex-col min-h-[75vh]">
-        {/* Top Gradient Accent & Progress */}
-        <div className="relative h-2 bg-gray-100 w-full overflow-hidden">
+      {/* Main Form Container Card with Rich Warm Terracotta & Sand Gradient Background */}
+      <div className="relative z-10 w-full max-w-3xl card-vibrant-bg backdrop-blur-2xl rounded-[32px] overflow-hidden flex flex-col min-h-[75vh]">
+        {/* Top Progress Accent */}
+        <div className="relative h-2.5 bg-orange-100/60 w-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 transition-all duration-500 ease-out rounded-r-full"
+            className="h-full bg-gradient-to-r from-[#C85A32] via-amber-500 to-emerald-600 transition-all duration-500 ease-out rounded-r-full"
             style={{ width: `${(step / 3) * 100}%` }}
           />
         </div>
 
         <div className="p-6 sm:p-10 md:p-12 flex flex-col flex-1">
           {/* Header & Step Badges */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-orange-200/60">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold mb-2">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Step {step} of 3
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C85A32] text-white text-xs font-black mb-2 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Step {step} of 3
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
                 {step === 1 && "Where & How Long?"}
                 {step === 2 && "Select Your Budget"}
                 {step === 3 && "Who's Travelling?"}
@@ -179,12 +177,12 @@ const CreateTrip = () => {
                 <div
                   key={s}
                   onClick={() => s < step && setstep(s)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-black transition-all ${
                     step === s
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+                      ? "bg-[#C85A32] text-white shadow-md shadow-amber-900/15"
                       : step > s
-                      ? "bg-indigo-100 text-indigo-700 cursor-pointer hover:bg-indigo-200"
-                      : "bg-gray-100 text-gray-400"
+                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-pointer hover:bg-emerald-200"
+                      : "bg-white/80 text-stone-400 border border-stone-200"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -200,15 +198,15 @@ const CreateTrip = () => {
             {step === 1 && (
               <div className="space-y-6 max-w-xl mx-auto w-full">
                 <div className="text-center space-y-1 mb-6">
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-stone-600 text-sm font-semibold">
                     Enter your target destination and planned duration (up to 5 days).
                   </p>
                 </div>
 
                 {/* Destination Search */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-indigo-600" /> Target Destination
+                  <label className="text-xs font-black uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-[#C85A32]" /> Target Destination
                   </label>
                   <LocationAutocomplete
                     value={formData.destination?.label || ""}
@@ -220,8 +218,8 @@ const CreateTrip = () => {
 
                 {/* Duration */}
                 <div className="space-y-2 pt-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-indigo-600" /> Number of Days (Max 5)
+                  <label className="text-xs font-black uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-[#C85A32]" /> Number of Days (Max 5)
                   </label>
                   <div className="relative">
                     <input
@@ -231,7 +229,7 @@ const CreateTrip = () => {
                       placeholder="e.g. 3"
                       value={formData.noOfDays}
                       onChange={(e) => handleInputChange("noOfDays", e.target.value)}
-                      className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl bg-gray-50/50 text-gray-900 font-semibold focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition-all text-base shadow-xs"
+                      className="block w-full px-4 py-3.5 border-2 border-stone-300/80 rounded-2xl bg-white text-stone-900 font-black focus:ring-2 focus:ring-[#C85A32] focus:outline-none transition-all text-base shadow-xs"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((num) => (
@@ -239,10 +237,10 @@ const CreateTrip = () => {
                           key={num}
                           type="button"
                           onClick={() => handleInputChange("noOfDays", num.toString())}
-                          className={`w-7 h-7 rounded-lg text-xs font-bold transition-all ${
+                          className={`w-7 h-7 rounded-xl text-xs font-black transition-all cursor-pointer ${
                             formData.noOfDays === num.toString()
-                              ? "bg-indigo-600 text-white"
-                              : "bg-gray-200/70 text-gray-600 hover:bg-gray-300"
+                              ? "bg-[#C85A32] text-white shadow-xs"
+                              : "bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200"
                           }`}
                         >
                           {num}d
@@ -258,8 +256,8 @@ const CreateTrip = () => {
             {step === 2 && (
               <div className="space-y-6">
                 <div className="text-center max-w-sm mx-auto space-y-1">
-                  <p className="text-gray-500 text-sm">
-                    Select a budget tier so our AI recommends accommodations and spots matching your spend level.
+                  <p className="text-stone-600 text-sm font-semibold">
+                    Select a budget tier so our AI recommends accommodations matching your spend.
                   </p>
                 </div>
 
@@ -271,29 +269,30 @@ const CreateTrip = () => {
                         key={opt.id}
                         type="button"
                         onClick={() => handleInputChange("budget", opt.id)}
-                        className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
+                        className={`group relative p-6 rounded-3xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
                           isSelected
-                            ? "border-indigo-600 bg-indigo-50/80 shadow-lg shadow-indigo-600/10 scale-105"
-                            : "border-gray-100 bg-gray-50/50 hover:border-indigo-200 hover:bg-white hover:shadow-md"
+                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl shadow-amber-900/20 scale-105"
+                            : "border-stone-200/90 bg-white/90 text-stone-900 hover:border-[#C85A32] hover:shadow-lg hover:bg-white"
                         }`}
                       >
                         {isSelected && (
-                          <div className="absolute top-3 right-3 text-indigo-600">
-                            <CheckCircle className="w-5 h-5 fill-indigo-600 text-white" />
+                          <div className="absolute top-3.5 right-3.5">
+                            <CheckCircle className="w-5 h-5 fill-emerald-400 text-stone-900" />
                           </div>
                         )}
                         <div
-                          className={`w-14 h-14 rounded-2xl flexCenter text-2xl transition-transform duration-300 group-hover:scale-110 ${
+                          className={`w-13 h-13 rounded-2xl flexCenter transition-transform duration-300 group-hover:scale-110 ${
                             isSelected
-                              ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                              : "bg-white text-gray-700 shadow-xs border border-gray-100"
+                              ? "bg-white/20 text-white"
+                              : "bg-orange-50 text-[#C85A32] border border-orange-200"
                           }`}
                         >
                           {opt.icon}
                         </div>
                         <div>
-                          <h4 className="font-bold text-gray-900 text-base">{opt.title || opt.label}</h4>
-                          <p className="text-xs text-gray-500 mt-1 leading-relaxed">{opt.desc}</p>
+                          <h4 className={`font-black text-base ${isSelected ? "text-white" : "text-stone-900"}`}>
+                            {opt.label || opt.title}
+                          </h4>
                         </div>
                       </button>
                     );
@@ -302,12 +301,12 @@ const CreateTrip = () => {
               </div>
             )}
 
-            {/* Step 3: Traveler Type */}
+            {/* Step 3: Traveler Type (Emojis Kept 100% Intact) */}
             {step === 3 && (
               <div className="space-y-6">
                 <div className="text-center max-w-sm mx-auto space-y-1">
-                  <p className="text-gray-500 text-sm">
-                    Tell us who you're traveling with to get tailored activity choices and hotel sizes.
+                  <p className="text-stone-600 text-sm font-semibold">
+                    Tell us who you're traveling with to get tailored activity choices.
                   </p>
                 </div>
 
@@ -319,23 +318,26 @@ const CreateTrip = () => {
                         key={opt.id}
                         type="button"
                         onClick={() => handleInputChange("traveler", opt.id)}
-                        className={`group relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-2.5 cursor-pointer ${
+                        className={`group relative p-5 rounded-3xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
                           isSelected
-                            ? "border-indigo-600 bg-indigo-50/80 shadow-lg shadow-indigo-600/10 scale-105"
-                            : "border-gray-100 bg-gray-50/50 hover:border-indigo-200 hover:bg-white hover:shadow-md"
+                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl shadow-amber-900/20 scale-105"
+                            : "border-stone-200/90 bg-white/90 text-stone-900 hover:border-[#C85A32] hover:shadow-lg hover:bg-white"
                         }`}
                       >
                         {isSelected && (
-                          <div className="absolute top-2.5 right-2.5 text-indigo-600">
-                            <CheckCircle className="w-4 h-4 fill-indigo-600 text-white" />
+                          <div className="absolute top-3 right-3">
+                            <CheckCircle className="w-4 h-4 fill-emerald-400 text-stone-900" />
                           </div>
                         )}
-                        <span className="text-3xl group-hover:scale-110 transition-transform duration-300">
+                        {/* Emojis kept 100% intact */}
+                        <span className="text-4xl group-hover:scale-115 transition-transform duration-300 transform-gpu leading-none">
                           {opt.icon}
                         </span>
                         <div>
-                          <h4 className="font-bold text-gray-900 text-sm">{opt.title}</h4>
-                          <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                          <h4 className={`font-black text-sm ${isSelected ? "text-white" : "text-stone-900"}`}>
+                            {opt.title}
+                          </h4>
+                          <p className={`text-[11px] mt-1 leading-relaxed font-semibold ${isSelected ? "text-amber-100" : "text-stone-500"}`}>
                             {opt.desc}
                           </p>
                         </div>
@@ -348,11 +350,11 @@ const CreateTrip = () => {
           </div>
 
           {/* Navigation Controls */}
-          <div className="flexBetween pt-6 mt-8 border-t border-gray-100">
+          <div className="flexBetween pt-6 mt-8 border-t border-orange-200/60">
             <button
               type="button"
               onClick={handleBack}
-              className={`inline-flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-gray-900 px-4 py-2.5 rounded-xl transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-1 text-xs font-black text-stone-500 hover:text-stone-900 px-4 py-2.5 rounded-xl transition-colors cursor-pointer ${
                 step === 1 && "invisible"
               }`}
             >
@@ -367,19 +369,19 @@ const CreateTrip = () => {
                 (step === 2 && !formData.budget) ||
                 (step === 3 && !formData.traveler)
               }
-              className={`inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-base text-white transition-all shadow-lg cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-black text-sm text-white transition-all shadow-lg cursor-pointer ${
                 (step === 1 && (!formData.destination || !formData.noOfDays)) ||
                 (step === 2 && !formData.budget) ||
                 (step === 3 && !formData.traveler)
-                  ? "bg-gray-300 cursor-not-allowed opacity-70 shadow-none"
-                  : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-indigo-600/30 hover:scale-105 active:scale-95"
+                  ? "bg-stone-300 cursor-not-allowed opacity-70 shadow-none"
+                  : "bg-[#C85A32] hover:bg-[#b04b27] shadow-amber-900/20 hover:scale-105 active:scale-95"
               }`}
             >
               <span>{step === 3 ? "Generate Plan" : "Continue"}</span>
               {step === 3 ? (
-                <Sparkles className="w-5 h-5 text-amber-300" />
+                <Sparkles className="w-4 h-4 text-amber-300" />
               ) : (
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               )}
             </button>
           </div>

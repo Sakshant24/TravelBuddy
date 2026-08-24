@@ -73,16 +73,16 @@ const MyTrips = () => {
   // Not logged in
   if (!user) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-indigo-50/50 to-white flexCenter p-4 pt-20">
-        <div className="text-center bg-white p-10 rounded-3xl shadow-xl border border-gray-100 max-w-md w-full space-y-4">
-          <div className="bg-indigo-100 w-16 h-16 rounded-2xl flexCenter mx-auto">
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4 pt-24">
+        <div className="text-center bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-xl border border-slate-200/80 max-w-md w-full space-y-4">
+          <div className="bg-indigo-50 border border-indigo-100 w-16 h-16 rounded-2xl flexCenter mx-auto">
             <Plane className="w-8 h-8 text-indigo-600" />
           </div>
-          <h3 className="text-gray-900">Sign in to view your trips</h3>
-          <p className="text-gray-500">Login to access your AI-generated travel plans and itineraries.</p>
+          <h3 className="text-slate-900 font-extrabold text-xl">Sign in to view your trips</h3>
+          <p className="text-slate-500 text-sm">Login to access your AI-generated travel plans and itineraries.</p>
           <Button
             onClick={() => navigate('/')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl w-full cursor-pointer mt-2"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl w-full cursor-pointer mt-2 py-3"
           >
             Go to Home
           </Button>
@@ -93,37 +93,37 @@ const MyTrips = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-indigo-50/50 to-white flexCenter p-4">
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4">
         <div className="text-center space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-25" />
-            <div className="relative bg-white p-4 rounded-full shadow-xl">
-              <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-30" />
+            <div className="relative bg-white/90 backdrop-blur-xl p-5 rounded-full shadow-xl border border-slate-200/80">
+              <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
             </div>
           </div>
-          <p className="text-gray-600 font-medium text-lg mt-6">Loading your trips...</p>
+          <p className="text-slate-600 font-semibold text-base mt-6">Loading your trips...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pt-20 pb-16">
+    <div className="min-h-screen bg-warm-editorial bg-grid-dots-light pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               My Trips
             </h2>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-slate-500 text-sm font-medium mt-1">
               All your AI-generated travel plans in one place.
             </p>
           </div>
           <Button
             onClick={() => navigate('/create-trip')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg cursor-pointer"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md cursor-pointer px-5 py-2.5"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create New Trip
@@ -132,17 +132,17 @@ const MyTrips = () => {
 
         {/* No Trips */}
         {trips.length === 0 && (
-          <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-            <div className="bg-indigo-100 w-20 h-20 rounded-2xl flexCenter mx-auto mb-6">
+          <div className="text-center py-20 bg-white/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-sm">
+            <div className="bg-indigo-50 border border-indigo-100 w-20 h-20 rounded-2xl flexCenter mx-auto mb-6">
               <MapPin className="w-10 h-10 text-indigo-600" />
             </div>
-            <h3 className="text-gray-900 mb-2">No trips yet</h3>
-            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+            <h3 className="text-slate-900 font-bold text-xl mb-2">No trips yet</h3>
+            <p className="text-slate-500 text-sm mb-6 max-w-sm mx-auto font-medium">
               Start planning your first adventure! Our AI will create a perfect itinerary for you.
             </p>
             <Button
               onClick={() => navigate('/create-trip')}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-8 cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl px-8 py-3 cursor-pointer"
             >
               Plan Your First Trip
             </Button>

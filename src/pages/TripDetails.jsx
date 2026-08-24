@@ -55,15 +55,15 @@ export const TripDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-indigo-50/50 to-white flexCenter p-4">
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4">
         <div className="text-center space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-25" />
-            <div className="relative bg-white p-4 rounded-full shadow-xl">
-              <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-30" />
+            <div className="relative bg-white/90 backdrop-blur-xl p-5 rounded-full shadow-xl border border-slate-200/80">
+              <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
             </div>
           </div>
-          <p className="text-gray-600 font-medium text-lg mt-6">Loading your travel plan...</p>
+          <p className="text-slate-600 font-semibold text-base mt-6">Loading your travel plan...</p>
         </div>
       </div>
     )
@@ -71,11 +71,11 @@ export const TripDetails = () => {
 
   if (!trip) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-indigo-50/50 to-white flexCenter p-4">
-        <div className="text-center bg-white p-8 rounded-3xl shadow-xl border border-gray-100 max-w-md w-full">
-          <h3 className="text-gray-900 mb-2">Trip Not Found</h3>
-          <p className="text-gray-500 mb-6">We couldn't find the trip you're looking for.</p>
-          <Button onClick={() => navigate('/create-trip')} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl w-full cursor-pointer">
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4">
+        <div className="text-center bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-slate-200/80 max-w-md w-full">
+          <h3 className="text-slate-900 font-bold text-xl mb-2">Trip Not Found</h3>
+          <p className="text-slate-500 mb-6 text-sm">We couldn't find the trip details you're looking for.</p>
+          <Button onClick={() => navigate('/create-trip')} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl w-full cursor-pointer py-3">
             Plan a New Trip
           </Button>
         </div>
@@ -89,9 +89,9 @@ export const TripDetails = () => {
   const itinerary = tripData?.itinerary || []
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pt-20 pb-16">
+    <div className="min-h-screen bg-warm-editorial bg-grid-dots-light pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Info Section - Hero Banner */}
+        {/* Info Section - Hero Banner with clear photo */}
         <InfoSection trip={trip} />
 
         {/* Hotel Recommendations */}

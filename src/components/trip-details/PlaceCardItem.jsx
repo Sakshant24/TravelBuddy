@@ -17,9 +17,9 @@ const PlaceCardItem = ({ activity, destination }) => {
       href={mapsUrl}
       target="_blank"
       rel="noreferrer"
-      className="group bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row gap-4 hover:-translate-y-0.5 cursor-pointer"
+      className="group bg-white rounded-3xl p-4 border border-stone-200/90 shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row gap-4 hover:-translate-y-0.5 cursor-pointer"
     >
-      <div className="relative w-full sm:w-36 h-36 shrink-0 rounded-xl overflow-hidden bg-gray-100">
+      <div className="relative w-full sm:w-36 h-36 shrink-0 rounded-2xl overflow-hidden bg-stone-100">
         <img
           src={actImage}
           alt={activity?.activityName || "Activity"}
@@ -32,31 +32,31 @@ const PlaceCardItem = ({ activity, destination }) => {
 
       <div className="flex flex-col flex-1 justify-between space-y-2">
         <div>
-          <h4 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+          <h4 className="font-black text-stone-900 group-hover:text-[#C85A32] transition-colors line-clamp-1">
             {activity?.activityName}
           </h4>
-          <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed font-medium">
             {activity?.description}
           </p>
         </div>
 
-        <div className="space-y-1.5 text-xs text-gray-600 pt-1">
+        <div className="space-y-1.5 text-xs text-stone-600 pt-1">
           {activity?.timeRange && (
-            <div className="flex items-center gap-1.5 text-indigo-600 font-medium">
+            <div className="flex items-center gap-1.5 text-[#C85A32] font-bold">
               <Clock className="w-3.5 h-3.5 shrink-0" />
               <span>{activity.timeRange}</span>
             </div>
           )}
-          <div className="flex items-center justify-between text-gray-500">
+          <div className="flex items-center justify-between text-stone-500 font-medium">
             {activity?.ticketPrice && (
               <span className="flex items-center gap-1">
-                <Ticket className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <Ticket className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>{activity.ticketPrice}</span>
               </span>
             )}
             {activity?.timeToTravel && (
               <span className="flex items-center gap-1">
-                <Navigation className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <Navigation className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 <span>{activity.timeToTravel}</span>
               </span>
             )}

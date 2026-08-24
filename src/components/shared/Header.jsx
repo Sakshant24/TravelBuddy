@@ -27,44 +27,63 @@ const Header = () => {
     }
 
     return (
-        <header className='bg-white border-b border-gray-200 px-6 py-3 flexBetween absolute top-0 left-0 right-0 w-full z-50'>
-            {/* Logo */}
-            <Link to={'/'} className='flex items-center gap-x-2 cursor-pointer'>
-                <div className='bg-indigo-600 p-1.5 rounded-lg'>
-                    <Plane className='w-6 h-6 text-white' />
+        <header className='bg-[#FAF7F2]/90 backdrop-blur-xl border-b border-stone-200/80 px-6 py-3.5 flexBetween fixed top-0 left-0 right-0 w-full z-50 shadow-2xs transition-all'>
+            {/* Logo - Aeroplane icon kept intact in Warm Terracotta */}
+            <Link to={'/'} className='flex items-center gap-x-2.5 cursor-pointer group'>
+                <div className='bg-[#C85A32] p-2 rounded-xl group-hover:scale-105 transition-transform shadow-xs'>
+                    <Plane className='w-5 h-5 text-white' />
                 </div>
-                <span className='hidden sm:flex font-bold text-xl capitalize'>TravelBuddy</span>
+                <span className='hidden sm:flex font-black text-xl tracking-tight text-stone-900 capitalize'>
+                    TravelBuddy
+                </span>
             </Link>
+
             {/* Buttons & Profile */}
-            <div className='flex gap-x-4 sm:gap-x-8'>
-                <Button onClick={() => navigate('/create-trip')} variant='outline' className={'mt-1 bg-transparent cursor-pointer'}>
-                    <Plus />
+            <div className='flex items-center gap-x-3 sm:gap-x-4'>
+                <Button 
+                    onClick={() => navigate('/create-trip')} 
+                    variant='outline' 
+                    className='rounded-2xl border-stone-300 bg-white/90 hover:bg-stone-100/90 text-stone-900 font-extrabold cursor-pointer shadow-2xs hover:shadow-xs transition-all text-xs sm:text-sm py-2 px-4'
+                >
+                    <Plus className="w-4 h-4 mr-1 text-[#C85A32]" />
                     Create Trip
                 </Button>
-                <div className='flex mt-1'>
-                    {user ? <div>
+                <div className='flex items-center'>
+                    {user ? (
                         <DropdownMenu>
-                            <DropdownMenuTrigger className="p-0 border-none cursor-pointer outline-none">
-                                <img src={user?.picture} alt='userProfile' height={37} width={37} className='rounded-full border border-gray-200 shadow-xs' />
+                            <DropdownMenuTrigger className="p-0 border-none cursor-pointer outline-none ring-2 ring-[#C85A32]/20 rounded-full transition-all hover:ring-[#C85A32]/50">
+                                <img src={user?.picture} alt='userProfile' height={38} width={38} className='rounded-full border border-stone-300 shadow-xs' />
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent className="rounded-2xl border-stone-200 p-2 shadow-xl bg-white/95 backdrop-blur-md min-w-[160px]">
                                 <DropdownMenuGroup>
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuLabel className="text-xs font-bold text-stone-400 uppercase tracking-wider px-2 py-1">
+                                        My Account
+                                    </DropdownMenuLabel>
                                 </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
+                                <DropdownMenuSeparator className="my-1 bg-stone-100" />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={() => navigate('/create-trip')}>Create Trip</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => navigate('/my-trips')}>My Trips</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate('/create-trip')} className="rounded-xl cursor-pointer font-bold text-xs text-stone-900 py-2">
+                                        Create Trip
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate('/my-trips')} className="rounded-xl cursor-pointer font-bold text-xs text-stone-900 py-2">
+                                        My Trips
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator className="my-1 bg-stone-100" />
+                                    <DropdownMenuItem onClick={handleLogout} className="rounded-xl cursor-pointer font-bold text-xs text-rose-600 py-2 focus:bg-rose-50">
+                                        Logout
+                                    </DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                    </div> :
-                        <Button onClick={() => setOpenDialog(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5!">
-                            <User />
+                    ) : (
+                        <Button 
+                            onClick={() => setOpenDialog(true)} 
+                            className="bg-[#C85A32] hover:bg-[#b04b27] text-white font-extrabold px-5 py-2 rounded-2xl cursor-pointer shadow-md shadow-[#C85A32]/20 hover:scale-105 active:scale-95 transition-all text-xs sm:text-sm"
+                        >
+                            <User className="w-4 h-4 mr-1.5" />
                             Login
                         </Button>
-                    }
+                    )}
                     <LoginDialog open={openDialog} onClose={() => setOpenDialog(false)} />
                 </div>
             </div>

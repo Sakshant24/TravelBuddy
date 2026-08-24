@@ -7,8 +7,8 @@ const HotelCardItem = ({ hotel, destination }) => {
     hotel?.hotelName + ", " + (hotel?.hotelAddress || destination)
   )}`
 
-  // Fetch real Google Places photo, fallback to AI-provided URL
-  const searchQuery = hotel?.hotelName + (hotel?.hotelAddress ? ", " + hotel.hotelAddress : ", " + destination)
+  // Fetch real photo, clean query for maximum hit rate
+  const searchQuery = hotel?.hotelName + ", " + destination
   const fallbackImg = hotel?.imageUrl || "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"
   const hotelImage = useGooglePhoto(searchQuery, fallbackImg)
 
@@ -17,9 +17,9 @@ const HotelCardItem = ({ hotel, destination }) => {
       href={mapsUrl}
       target="_blank"
       rel="noreferrer"
-      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col hover:-translate-y-1 cursor-pointer"
+      className="group bg-white rounded-3xl overflow-hidden border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col hover:-translate-y-1 cursor-pointer"
     >
-      <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+      <div className="relative h-48 w-full overflow-hidden bg-stone-100">
         <img
           src={hotelImage}
           alt={hotel?.hotelName || "Hotel"}
@@ -29,7 +29,7 @@ const HotelCardItem = ({ hotel, destination }) => {
           }}
         />
         {hotel?.rating && (
-          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold text-gray-800 flex items-center gap-1 shadow-sm">
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-xl text-xs font-black text-stone-900 flex items-center gap-1 shadow-xs">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
             <span>{hotel.rating}</span>
           </div>
@@ -38,26 +38,26 @@ const HotelCardItem = ({ hotel, destination }) => {
 
       <div className="p-5 flex flex-col flex-1 justify-between space-y-3">
         <div>
-          <h4 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+          <h4 className="font-black text-stone-900 group-hover:text-[#C85A32] transition-colors line-clamp-1">
             {hotel?.hotelName}
           </h4>
-          <p className="text-xs text-gray-500 flex items-start gap-1 mt-1 line-clamp-2">
-            <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0 mt-0.5" />
+          <p className="text-xs text-stone-500 flex items-start gap-1 mt-1 line-clamp-2 font-medium">
+            <MapPin className="w-3.5 h-3.5 text-[#C85A32] shrink-0 mt-0.5" />
             <span>{hotel?.hotelAddress}</span>
           </p>
         </div>
 
         {hotel?.description && (
-          <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed font-medium">
             {hotel.description}
           </p>
         )}
 
-        <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
+        <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+          <span className="text-xs font-black text-[#C85A32] bg-orange-50 px-2.5 py-1 rounded-xl border border-orange-100">
             {hotel?.priceRange || "$$"}
           </span>
-          <span className="text-xs text-gray-400 group-hover:text-indigo-600 flex items-center gap-1 transition-colors">
+          <span className="text-xs font-extrabold text-stone-400 group-hover:text-[#C85A32] flex items-center gap-1 transition-colors">
             View on Map <ExternalLink className="w-3 h-3" />
           </span>
         </div>
