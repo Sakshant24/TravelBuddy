@@ -3,11 +3,9 @@ import LocationAutocomplete from "../components/LocationAutocomplete";
 import { ArrowRight, Calendar, CheckCircle, Loader2, Sparkles, MapPin, Wallet, Users, ChevronLeft } from "lucide-react";
 import { BUDGET_OPTIONS, TRAVELER_OPTIONS } from "../assets/data";
 import { toast } from "sonner";
-import { generateTripWithAI } from "../services/aiModel";
 import LoginDialog from "../components/shared/LoginDialog";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../services/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { saveTripToBackend, generateTripFromBackend } from "../services/apiClient";
 
 const CreateTrip = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -49,19 +47,31 @@ const CreateTrip = () => {
     if (!formData.destination || !formData.noOfDays || !formData.budget || !formData.traveler) {
       return toast.error("Please fill all details.");
     }
-    if (formData.noOfDays > 5) {
-      return toast.error("AI can currently generate up to 5 days only.");
+    if (Number(formData.noOfDays) > 5) {
+      return toast.error("AI can generate up to 5 days only.");
     }
+
     setloading(true);
 
-    const DYNAMIC_PROMPT = `Generate a travel plan for Location: ${formData?.destination?.label} for ${formData?.noOfDays} days for a ${formData?.traveler} traveler on ${formData?.budget} budget. Return the result strictly as a single JSON object using camelCase keys, the travel plan with trip note and must feature hotelOptions array, each hotel with hotelName, hotelAddress, priceRange, imageUrl, rating, description, and a coordinates, alongside an itinerary array of daily plans. Each day must include a dayNumber, theme, and an activities array, where each activity contains activityName, description, imageUrl, ticketPrice, timeRange, timeToTravel and coordinates`;
     try {
-      const tripData = await generateTripWithAI(DYNAMIC_PROMPT);
+      const targetDestination =
+        typeof formData.destination === "object" && formData.destination !== null
+          ? formData.destination.label
+          : formData.destination;
+
+      // Call Backend Agent
+      const tripData = await generateTripFromBackend({
+        destination: targetDestination,
+        noOfDays: formData.noOfDays,
+        traveler: formData.traveler,
+        budget: formData.budget,
+      });
+
       await saveToDB(tripData);
     } catch (error) {
       setloading(false);
-      console.log("AI Error:", error);
-      toast.error(error.message?.includes("429") ? "Rate limit hit! Wait 60s." : "Generation failed.");
+      console.error("AI Error:", error);
+      toast.error("Generation failed. Please verify backend is running.");
     }
   };
 
@@ -70,50 +80,30 @@ const CreateTrip = () => {
       const user = JSON.parse(localStorage.getItem("user"));
       const docId = Date.now().toString();
 
-      const cleanData = JSON.parse(
-        JSON.stringify({
-          userSelection: formData,
-          tripData: tripData,
-          userEmail: user?.email || "",
-          id: docId,
-        })
-      );
+      const cleanData = {
+        userSelection: formData,
+        tripData: tripData,
+        userEmail: user?.email || "",
+        id: docId,
+      };
 
+      // Fallback cache
       localStorage.setItem("trip_" + docId, JSON.stringify(cleanData));
 
-      try {
-        await setDoc(doc(db, "trips-ai", docId), cleanData);
-        toast.success("Trip generated and saved!");
-      } catch (dbError) {
-        console.error("Firebase Save Error:", dbError);
-        if (
-          dbError?.code === "permission-denied" ||
-          dbError?.message?.includes("permission") ||
-          dbError?.message?.includes("permissions")
-        ) {
-          toast.warning(
-            "Trip generated! (Note: Firebase permission denied. Saved locally.)",
-            { duration: 6000 }
-          );
-        } else {
-          toast.warning(
-            `Trip generated! (Saved locally. Firebase: ${dbError?.message || "Error saving"})`
-          );
-        }
-      }
+      // Save to SQLite via FastAPI
+      await saveTripToBackend(cleanData);
+      toast.success("Trip successfully created!");
 
       setloading(false);
       navigate("/trips/" + docId);
     } catch (error) {
       console.error("Save Error:", error);
       setloading(false);
-      toast.error(
-        error?.message ? `Failed to process trip: ${error.message}` : "Failed to save trip."
-      );
+      navigate("/trips/" + Date.now().toString());
     }
   };
 
-  if (loading) {
+if (loading) {
     return (
       <div className="min-h-screen bg-warm-editorial bg-grid-dots flexCenter p-4 text-stone-900">
         <div className="text-center space-y-6 max-w-md">
@@ -125,10 +115,10 @@ const CreateTrip = () => {
           </div>
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-stone-900">
-              Curating your trip to {formData.destination?.label?.split(",")[0]}...
+              Curating your trip to {formData.destination?.label ? formData.destination.label.split(",")[0] : "your destination"}...
             </h3>
-            <p className="text-sm text-stone-600 font-semibold animate-pulse">
-              Our AI is finding the best hotels, daily activities, and hidden spots for your {formData.noOfDays}-day trip...
+            <p className="text-sm text-stone-600 font-semibold">
+              Our AI is finding the best hotels and tailoring your {formData.noOfDays}-day itinerary...
             </p>
           </div>
         </div>
@@ -138,14 +128,10 @@ const CreateTrip = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-warm-editorial bg-grid-dots pt-24 pb-16 flexCenter px-4">
-      {/* Ambient Glowing Orbs */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-amber-300/30 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-orange-300/30 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-emerald-200/25 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Main Form Container Card with Rich Warm Terracotta & Sand Gradient Background */}
       <div className="relative z-10 w-full max-w-3xl card-vibrant-bg backdrop-blur-2xl rounded-[32px] overflow-hidden flex flex-col min-h-[75vh]">
-        {/* Top Progress Accent */}
         <div className="relative h-2.5 bg-orange-100/60 w-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-[#C85A32] via-amber-500 to-emerald-600 transition-all duration-500 ease-out rounded-r-full"
@@ -154,7 +140,6 @@ const CreateTrip = () => {
         </div>
 
         <div className="p-6 sm:p-10 md:p-12 flex flex-col flex-1">
-          {/* Header & Step Badges */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-orange-200/60">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C85A32] text-white text-xs font-black mb-2 shadow-xs">
@@ -167,7 +152,6 @@ const CreateTrip = () => {
               </h2>
             </div>
 
-            {/* Visual Step Tabs */}
             <div className="flex items-center gap-2">
               {[
                 { s: 1, label: "Destination", icon: MapPin },
@@ -192,18 +176,15 @@ const CreateTrip = () => {
             </div>
           </div>
 
-          {/* Form Step Body */}
           <div className="flex-1 flex flex-col justify-center">
-            {/* Step 1: Destination & Duration */}
             {step === 1 && (
               <div className="space-y-6 max-w-xl mx-auto w-full">
                 <div className="text-center space-y-1 mb-6">
                   <p className="text-stone-600 text-sm font-semibold">
-                    Enter your target destination and planned duration (up to 5 days).
+                    Enter your target destination and duration (up to 5 days).
                   </p>
                 </div>
 
-                {/* Destination Search */}
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
                     <MapPin className="w-4 h-4 text-[#C85A32]" /> Target Destination
@@ -216,7 +197,6 @@ const CreateTrip = () => {
                   />
                 </div>
 
-                {/* Duration */}
                 <div className="space-y-2 pt-2">
                   <label className="text-xs font-black uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
                     <Calendar className="w-4 h-4 text-[#C85A32]" /> Number of Days (Max 5)
@@ -252,12 +232,11 @@ const CreateTrip = () => {
               </div>
             )}
 
-            {/* Step 2: Budget */}
             {step === 2 && (
               <div className="space-y-6">
                 <div className="text-center max-w-sm mx-auto space-y-1">
                   <p className="text-stone-600 text-sm font-semibold">
-                    Select a budget tier so our AI recommends accommodations matching your spend.
+                    Select your budget preference.
                   </p>
                 </div>
 
@@ -271,7 +250,7 @@ const CreateTrip = () => {
                         onClick={() => handleInputChange("budget", opt.id)}
                         className={`group relative p-6 rounded-3xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
                           isSelected
-                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl shadow-amber-900/20 scale-105"
+                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl scale-105"
                             : "border-stone-200/90 bg-white/90 text-stone-900 hover:border-[#C85A32] hover:shadow-lg hover:bg-white"
                         }`}
                       >
@@ -301,12 +280,11 @@ const CreateTrip = () => {
               </div>
             )}
 
-            {/* Step 3: Traveler Type (Emojis Kept 100% Intact) */}
             {step === 3 && (
               <div className="space-y-6">
                 <div className="text-center max-w-sm mx-auto space-y-1">
                   <p className="text-stone-600 text-sm font-semibold">
-                    Tell us who you're traveling with to get tailored activity choices.
+                    Tell us who you're traveling with.
                   </p>
                 </div>
 
@@ -320,7 +298,7 @@ const CreateTrip = () => {
                         onClick={() => handleInputChange("traveler", opt.id)}
                         className={`group relative p-5 rounded-3xl border-2 transition-all duration-300 flex flex-col items-center text-center space-y-3 cursor-pointer ${
                           isSelected
-                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl shadow-amber-900/20 scale-105"
+                            ? "border-[#C85A32] bg-gradient-to-br from-[#C85A32] to-[#b04b27] text-white shadow-xl scale-105"
                             : "border-stone-200/90 bg-white/90 text-stone-900 hover:border-[#C85A32] hover:shadow-lg hover:bg-white"
                         }`}
                       >
@@ -329,7 +307,6 @@ const CreateTrip = () => {
                             <CheckCircle className="w-4 h-4 fill-emerald-400 text-stone-900" />
                           </div>
                         )}
-                        {/* Emojis kept 100% intact */}
                         <span className="text-4xl group-hover:scale-115 transition-transform duration-300 transform-gpu leading-none">
                           {opt.icon}
                         </span>
@@ -349,7 +326,6 @@ const CreateTrip = () => {
             )}
           </div>
 
-          {/* Navigation Controls */}
           <div className="flexBetween pt-6 mt-8 border-t border-orange-200/60">
             <button
               type="button"
@@ -378,11 +354,7 @@ const CreateTrip = () => {
               }`}
             >
               <span>{step === 3 ? "Generate Plan" : "Continue"}</span>
-              {step === 3 ? (
-                <Sparkles className="w-4 h-4 text-amber-300" />
-              ) : (
-                <ArrowRight className="w-4 h-4" />
-              )}
+              {step === 3 ? <Sparkles className="w-4 h-4 text-amber-300" /> : <ArrowRight className="w-4 h-4" />}
             </button>
           </div>
         </div>
