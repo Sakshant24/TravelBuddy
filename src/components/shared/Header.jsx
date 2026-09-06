@@ -5,6 +5,7 @@ import { Button } from '../ui/button'
 import LoginDialog from './LoginDialog'
 import Logo from './Logo'
 import { googleLogout } from '@react-oauth/google'
+import { logoutUser } from '../../services/authApi'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,9 +21,9 @@ const Header = () => {
     const user = JSON.parse(localStorage.getItem("user"))
     const navigate = useNavigate()
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         googleLogout()
-        localStorage.removeItem("user")
+        await logoutUser()
         navigate('/')
         window.location.reload()
     }

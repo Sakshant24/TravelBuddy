@@ -90,12 +90,13 @@ const CreateTrip = () => {
       // Fallback cache
       localStorage.setItem("trip_" + docId, JSON.stringify(cleanData));
 
-      // Save to SQLite via FastAPI
-      await saveTripToBackend(cleanData);
+      // Save to PostgreSQL via FastAPI
+      const savedTrip = await saveTripToBackend(cleanData);
+      const targetId = savedTrip?.id || docId;
       toast.success("Trip successfully created!");
 
       setloading(false);
-      navigate("/trips/" + docId);
+      navigate("/trips/" + targetId);
     } catch (error) {
       console.error("Save Error:", error);
       setloading(false);

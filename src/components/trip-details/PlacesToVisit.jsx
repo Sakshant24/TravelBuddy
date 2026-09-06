@@ -14,7 +14,6 @@ const PlacesToVisit = ({ itinerary, destination }) => {
           Your curated day-by-day roadmap of attractions, timings, and travel recommendations.
         </p>
       </div>
-
       <div className="space-y-10">
         {itinerary.map((day, dIdx) => (
           <div key={dIdx} className="space-y-4">

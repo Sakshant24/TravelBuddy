@@ -17,7 +17,7 @@ export const TripDetails = () => {
   const fetchTripData = async () => {
     setLoading(true)
 
-    // 1. Primary: FastAPI SQLite
+    // 1. Primary: FastAPI PostgreSQL
     try {
       const backendTrip = await fetchTripFromBackend(tripId)
       if (backendTrip){

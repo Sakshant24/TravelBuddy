@@ -36,7 +36,7 @@ const fetchWikipediaPhoto = async (query) => {
         return page.thumbnail.source;
       }
     }
-  } catch (e) {
+  } catch (e){
     // silently proceed to Unsplash
   }
 

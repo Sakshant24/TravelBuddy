@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { collection, query, where, getDocs } from "firebase/firestore"
-import { db } from '../services/firebaseConfig'
 import { Loader2, MapPin, Plus, Plane } from 'lucide-react'
 import { Button } from '../components/ui/button'
-import { toast } from 'sonner'
 import TripCardItem from '../components/trip-details/TripCardItem'
+import { fetchUserTripsFromBackend } from '../services/apiClient'
 
 const MyTrips = () => {
   const [trips, setTrips] = useState([])
@@ -23,45 +21,38 @@ const MyTrips = () => {
 
     let allTrips = []
 
-    // Try Firestore first
+    // 1. Primary: FastAPI PostgreSQL Backend (Authenticated via JWT)
     try {
-      const q = query(
-        collection(db, "trips-ai"),
-        where("userEmail", "==", user?.email)
-      )
-      const querySnapshot = await getDocs(q)
-      querySnapshot.forEach((doc) => {
-        allTrips.push(doc.data())
-      })
-    } catch (err) {
-      console.warn("Firestore fetch error, loading from local storage:", err)
+      const backendTrips = await fetchUserTripsFromBackend()
+      if (Array.isArray(backendTrips) && backendTrips.length > 0) {
+        allTrips = backendTrips
+      }
+    } catch (backendErr) {
+      console.warn("Backend fetch failed, checking local storage:", backendErr?.message)
     }
 
-    // Also load from localStorage as fallback/supplement
+    // 2. Offline LocalStorage fallback
     try {
       const keys = Object.keys(localStorage).filter(k => k.startsWith('trip_'))
       keys.forEach(key => {
         try {
           const localTrip = JSON.parse(localStorage.getItem(key))
-          // Avoid duplicates - check if already fetched from Firestore
           if (localTrip && !allTrips.find(t => t.id === localTrip.id)) {
-            // Only show trips that belong to this user
             if (localTrip.userEmail === user?.email) {
               allTrips.push(localTrip)
             }
           }
-        } catch (e) {
-          // skip malformed entries
-        }
+        } catch (e) {}
       })
-    } catch (e) {
-      console.warn("LocalStorage read error:", e)
-    }
+    } catch (e) {}
 
-    // Sort by id (timestamp) descending - newest first
-    allTrips.sort((a, b) => Number(b.id) - Number(a.id))
+    allTrips.sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0))
     setTrips(allTrips)
     setLoading(false)
+  }
+
+  const handleDeleteTrip = (deletedId) => {
+    setTrips((prev) => prev.filter((t) => t.id !== deletedId))
   }
 
   useEffect(() => {
@@ -70,20 +61,16 @@ const MyTrips = () => {
 
   const user = JSON.parse(localStorage.getItem("user"))
 
-  // Not logged in
   if (!user) {
     return (
-      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4 pt-24">
-        <div className="text-center bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-xl border border-slate-200/80 max-w-md w-full space-y-4">
-          <div className="bg-indigo-50 border border-indigo-100 w-16 h-16 rounded-2xl flexCenter mx-auto">
-            <Plane className="w-8 h-8 text-indigo-600" />
+      <div className="min-h-screen bg-warm-editorial bg-grid-dots flexCenter p-4 pt-24">
+        <div className="text-center bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-stone-200/80 max-w-md w-full space-y-4">
+          <div className="w-16 h-16 bg-orange-50 text-[#C85A32] rounded-2xl flexCenter mx-auto">
+            <Plane className="w-8 h-8" />
           </div>
-          <h3 className="text-slate-900 font-extrabold text-xl">Sign in to view your trips</h3>
-          <p className="text-slate-500 text-sm">Login to access your AI-generated travel plans and itineraries.</p>
-          <Button
-            onClick={() => navigate('/')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl w-full cursor-pointer mt-2 py-3"
-          >
+          <h3 className="text-stone-900 font-bold text-xl">Sign in to view your trips</h3>
+          <p className="text-stone-500 text-sm">You need to be logged in to see all your saved itineraries.</p>
+          <Button onClick={() => navigate('/')} className="bg-[#C85A32] hover:bg-[#b04b27] text-white font-bold rounded-2xl w-full cursor-pointer py-3">
             Go to Home
           </Button>
         </div>
@@ -91,69 +78,55 @@ const MyTrips = () => {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-warm-editorial bg-grid-dots-light flexCenter p-4">
-        <div className="text-center space-y-4">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-indigo-200 rounded-full animate-ping opacity-30" />
-            <div className="relative bg-white/90 backdrop-blur-xl p-5 rounded-full shadow-xl border border-slate-200/80">
-              <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
-            </div>
-          </div>
-          <p className="text-slate-600 font-semibold text-base mt-6">Loading your trips...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-warm-editorial bg-grid-dots-light pt-24 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+    <div className="min-h-screen bg-warm-editorial bg-grid-dots pt-24 pb-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-6">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              My Trips
-            </h2>
-            <p className="text-slate-500 text-sm font-medium mt-1">
-              All your AI-generated travel plans in one place.
-            </p>
+            <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">My Trips</h1>
+            <p className="text-stone-500 text-sm mt-1">All your AI-crafted travel plans in one place.</p>
           </div>
           <Button
             onClick={() => navigate('/create-trip')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md cursor-pointer px-5 py-2.5"
+            className="bg-[#C85A32] hover:bg-[#b04b27] text-white font-bold rounded-2xl cursor-pointer shadow-md hover:scale-105 transition-all text-sm py-2.5 px-5 self-start sm:self-auto"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Create New Trip
+            <Plus className="w-4 h-4 mr-1.5" /> Plan New Trip
           </Button>
         </div>
 
-        {/* No Trips */}
-        {trips.length === 0 && (
-          <div className="text-center py-20 bg-white/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-sm">
-            <div className="bg-indigo-50 border border-indigo-100 w-20 h-20 rounded-2xl flexCenter mx-auto mb-6">
-              <MapPin className="w-10 h-10 text-indigo-600" />
+        {loading && (
+          <div className="flexCenter py-20">
+            <div className="text-center space-y-3">
+              <Loader2 className="w-8 h-8 text-[#C85A32] animate-spin mx-auto" />
+              <p className="text-stone-500 text-sm font-medium">Fetching your itineraries...</p>
             </div>
-            <h3 className="text-slate-900 font-bold text-xl mb-2">No trips yet</h3>
-            <p className="text-slate-500 text-sm mb-6 max-w-sm mx-auto font-medium">
-              Start planning your first adventure! Our AI will create a perfect itinerary for you.
-            </p>
-            <Button
-              onClick={() => navigate('/create-trip')}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl px-8 py-3 cursor-pointer"
-            >
-              Plan Your First Trip
-            </Button>
           </div>
         )}
 
-        {/* Trips Grid */}
-        {trips.length > 0 && (
+        {!loading && trips.length === 0 && (
+          <div className="text-center py-20 bg-white/60 backdrop-blur-sm rounded-3xl border border-dashed border-stone-300 p-12 space-y-4">
+            <div className="w-16 h-16 bg-orange-50 text-[#C85A32] rounded-2xl flexCenter mx-auto">
+              <MapPin className="w-8 h-8" />
+            </div>
+            <h3 className="text-stone-900 font-bold text-lg">No trips planned yet</h3>
+            <p className="text-stone-500 text-sm max-w-sm mx-auto">
+              You haven't generated any travel itineraries yet. Start planning your dream getaway today!
+            </p>
+            <div className="pt-2">
+              <Button
+                onClick={() => navigate('/create-trip')}
+                className="bg-[#C85A32] hover:bg-[#b04b27] text-white font-bold rounded-2xl cursor-pointer py-2.5 px-6"
+              >
+                Create Your First Trip
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {!loading && trips.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trips.map((trip, index) => (
-              <TripCardItem key={trip.id || index} trip={trip} />
+            {trips.map((trip) => (
+              <TripCardItem key={trip.id} trip={trip} onDelete={handleDeleteTrip} />
             ))}
           </div>
         )}
